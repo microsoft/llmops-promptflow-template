@@ -1,4 +1,4 @@
-name: named_entity_recognition_pr_dev_pipeline
+name: named_entity_recognition_data_aml_pipeline
 on:
   # workflow_call allows reusable workflow that can be called by other workflows
   workflow_call:
@@ -6,7 +6,7 @@ on:
       subscription_id:
         description: Azure subscription id
         type: string
-        required: true
+        required: true      
       resource_group_name:
         description: Azure resource group name
         type: string
@@ -41,7 +41,7 @@ on:
       subscription_id:
         description: Azure subscription id
         type: string
-        required: true
+        required: true      
       resource_group_name:
         description: Azure resource group name
         type: string
@@ -104,7 +104,7 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+    
       - name: Configure Azure ML Agent
         uses: ./.github/actions/configure_azureml_agent
 
