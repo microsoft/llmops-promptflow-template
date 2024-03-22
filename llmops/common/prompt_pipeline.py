@@ -94,7 +94,7 @@ def prepare_and_execute(
     standard_flow_path = config["STANDARD_FLOW_PATH"]
     data_config_path = f"{flow_to_execute}/configs/data_config.json"
 
-    runtime = config["RUNTIME_NAME"]
+    #runtime = config["RUNTIME_NAME"]
     experiment_name = f"{flow_to_execute}_{stage}"
 
     ml_client = MLClient(
@@ -192,13 +192,13 @@ def prepare_and_execute(
                         run = Run(
                             flow=flow,
                             data=data_id,
-                            runtime=runtime,
+                            #runtime=runtime,
                             # un-comment the resources parameter assignment
                             # and update the size of the compute and also
                             # comment the runtime parameter assignment to
                             # enable automatic runtime.
                             # Reference: COMPUTE_RUNTIME
-                            # resources={"instance_type": "Standard_E4ds_v4"},
+                            resources={"instance_type": "Standard_E4ds_v4"},
                             variant=variant_string,
                             name=(
                                 f"{experiment_name}_{variant_id}"
@@ -246,13 +246,13 @@ def prepare_and_execute(
             run = Run(
                 flow=flow,
                 data=data_id,
-                runtime=runtime,
+                #runtime=runtime,
                 # un-comment the resources parameter assignment
                 # and update the size of the compute and also
                 # comment the runtime parameter assignment to
                 # enable automatic runtime.
                 # Reference: COMPUTE_RUNTIME
-                # resources={"instance_type": "Standard_E4ds_v4"},
+                resources={"instance_type": "Standard_E4ds_v4"},
                 name=f"{experiment_name}_{timestamp}_{data_ref}",
                 display_name=f"{experiment_name}_{timestamp}_{data_ref}",
                 environment_variables={
