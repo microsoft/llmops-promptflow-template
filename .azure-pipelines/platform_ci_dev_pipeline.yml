@@ -198,16 +198,6 @@ stages:
         # Reads model_version.txt file. Assigns it to variable MODEL_VERSION
         # MODEL_VERSION Used in next step for deployment
         #=====================================   
-        - template: templates/execute_python_code.yml
-          parameters:
-            step_name: "Register Standard Flow"
-            script_parameter: |
-              python -m llmops.common.deployment.register_model \
-                --subscription_id $(SUBSCRIPTION_ID) \
-                --flow_to_execute ${{ parameters.flow_to_execute }} \
-                --output_file "model_version.txt" \
-                --build_id $(Build.Buildid) \
-                --env_name ${{ parameters.exec_environment }}
         - task: AzureCLI@2
           displayName: Read Model Version
           name: read_model_version
