@@ -26,6 +26,7 @@ steps:
         echo "$selected_object"
         RESOURCE_GROUP_NAME=$(echo "$selected_object" | jq -r '.RESOURCE_GROUP_NAME')
         WORKSPACE_NAME=$(echo "$selected_object" | jq -r '.WORKSPACE_NAME')
+        STANDARD_FLOW_PATH=$(echo "$selected_object" | jq -r '.STANDARD_FLOW_PATH')
         FLOW_TYPE=$(echo "$selected_object" | jq -r '.FLOW_TYPE')
         if [[ ! -n "$FLOW_TYPE" ]]; then
           FLOW_TYPE=standard
@@ -33,4 +34,4 @@ steps:
       else
         echo "Object in config file not found"
       fi
-      pfazure flow create --flow ./${{ parameters.flow_to_execute }}/flows/standard --set display_name=${{ parameters.flow_to_execute }}:${{ parameters.BUILD_ID }} --set type=$FLOW_TYPE --subscription ${{ parameters.SUBSCRIPTION_ID }} --resource-group $RESOURCE_GROUP_NAME --workspace-name $WORKSPACE_NAME
+      pfazure flow create --flow ./${{ parameters.flow_to_execute }}/$STANDARD_FLOW_PATH --set display_name=${{ parameters.flow_to_execute }}:${{ parameters.BUILD_ID }} --set type=$FLOW_TYPE --subscription ${{ parameters.SUBSCRIPTION_ID }} --resource-group $RESOURCE_GROUP_NAME --workspace-name $WORKSPACE_NAME
