@@ -1,5 +1,5 @@
 """
-This module creates Kubernetes managed endpoint as flow deployment process.
+This module creates Kubernetes managed endpoint as flow deployment process if it does not already exist.
 
 Args:
 --base_path: Base path of the use case. Where flows, data,
@@ -27,7 +27,7 @@ from azure.identity import DefaultAzureCredential
 from llmops.common.logger import llmops_logger
 from llmops.common.experiment_cloud_config import ExperimentCloudConfig
 
-logger = llmops_logger("provision_endpoint")
+logger = llmops_logger("kubernetes_endpoint")
 
 
 def create_kubernetes_endpoint(
@@ -51,6 +51,8 @@ def create_kubernetes_endpoint(
         credential=DefaultAzureCredential(),
     )
 
+    existing_endpoints = ml_client.online_endpoints.list(local=False)
+
     config_file = open(real_config)
     endpoint_config = json.load(config_file)
 
@@ -61,21 +63,35 @@ def create_kubernetes_endpoint(
                 endpoint_desc = elem["ENDPOINT_DESC"]
                 compute_name = elem["COMPUTE_NAME"]
 
-                endpoint = KubernetesOnlineEndpoint(
-                    name=endpoint_name,
-                    description=endpoint_desc,
-                    compute=compute_name,
-                    auth_mode="key",
-                    tags={"build_id": build_id} if build_id else {},
-                    properties={
-                        "enforce_access_to_default_secret_stores": True,
-                    },
-                )
+                # See if endpoint with name endpoint_name already exists
+                endpoint = next(
+                    (
+                        e for e in existing_endpoints
+                        if e.name == endpoint_name
+                        ),
+                    None)
 
-                logger.info(f"Creating endpoint {endpoint.name}")
-                ml_client.online_endpoints.begin_create_or_update(
-                    endpoint=endpoint
-                ).result()
+                if endpoint is None:
+                    endpoint = KubernetesOnlineEndpoint(
+                        name=endpoint_name,
+                        description=endpoint_desc,
+                        compute=compute_name,
+                        auth_mode="key",
+                        tags={"build_id": build_id} if build_id else {},
+                        properties={
+                            "enforce_access_to_default_secret_stores": True,
+                        },
+                    )
+    
+                    logger.info(f"Creating endpoint {endpoint.name}")
+                    ml_client.online_endpoints.begin_create_or_update(
+                        endpoint=endpoint
+                    ).result()
+                else:
+                    logger.info(
+                        f"Skipping create as endpoint"
+                        f"{endpoint.name} already exists"
+                        )
 
                 logger.info(f"Obtaining endpoint {endpoint.name} identity")
                 principal_id = ml_client.online_endpoints.get(
