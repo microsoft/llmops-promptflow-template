@@ -182,7 +182,7 @@ def create_kubernetes_deployment(
                     environment_variables[key] = value
                 environment_variables["PROMPTFLOW_RUN_MODE"] = "serving"
                 environment_variables["PROMPTFLOW_SERVING_ENGINE"] = "fastapi"
-                environment_variables["F_LOGGING_LEVEL"] = "WARNING"
+                environment_variables["PF_LOGGING_LEVEL"] = "WARNING"
                 environment_variables["PRT_CONFIG_OVERRIDE"] = (
                     f"deployment.subscription_id={config.subscription_id},"
                     f"deployment.resource_group={config.resource_group_name},"
