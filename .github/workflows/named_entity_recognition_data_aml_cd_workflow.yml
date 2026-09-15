@@ -56,15 +56,15 @@ jobs:
 
     steps:
       - name: Checkout current repository
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: Set up python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4.9.1
         with:
           python-version: 3.9
 
       - name: Azure login
-        uses: azure/login@v1
+        uses: azure/login@cb79c773a3cfa27f31f25eb3f677781210c9ce3d # v1.6.1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
     
